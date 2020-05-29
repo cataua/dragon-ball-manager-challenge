@@ -1,6 +1,5 @@
 import React from 'react';
-import { Container, Row, Col, Button } from 'reactstrap';
-import { Text, Flex } from 'rebass';
+import { Container, Row, Col } from 'reactstrap';
 
 import Balls from '../components/Balls/Balls';
 import Action from '../components/Action/Action';
@@ -23,7 +22,7 @@ const Manager = () => {
       </Row>
       <Row>
         <Col>
-          <Balls balls={dragonBalls.balls} profile={profileBalls}/>
+          <Balls dragonBalls={dragonBalls.balls} profile={profileBalls}/>
         </Col>
       </Row>
     </Container>

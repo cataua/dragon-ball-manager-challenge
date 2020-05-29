@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Container,
-  Row,
-  Col,
   Button,
   Modal,
   ModalFooter,
@@ -51,7 +48,9 @@ const Action = ({ balls }) => {
         </Button>
       </CardContent>
       <Modal isOpen={modal} toggle={toggle}>
-        <Text data-testid="modaltext">Você não tem todas as esferas para invocar o shenlong</Text>
+        <ModalBody>
+          <Text data-testid="modaltext">Você não tem todas as esferas para invocar o Shenlong</Text>
+        </ModalBody>
         <ModalFooter>
           <Button color='secondary' data-testid="back" onClick={toggle}>
             Voltar

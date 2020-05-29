@@ -5,11 +5,9 @@ import {
   CardImg,
   CardBody,
   CardTitle,
-  CardSubtitle,
   Badge,
   Col,
   Row,
-  Form,
   FormGroup,
   Label,
   Button,
@@ -17,6 +15,7 @@ import {
   Modal,
   ModalFooter,
   ModalBody,
+  FormFeedback,
 } from 'reactstrap';
 import { Text, Flex } from 'rebass';
 
@@ -27,10 +26,14 @@ const Card = styled(BCard)`
   margin: 5px 0px;
 `;
 
-const Balls = ({ balls, profile }) => {
-  const [list, setList] = useState(balls);
+const Balls = ({ dragonBalls, profile }) => {
+  const ballsList = [...dragonBalls]
+  const [list, setList] = useState(ballsList);
+  const [balls, setBalls] = useState(ballsList);
   const [modal, setModal] = useState(false);
   const [currentBall, setBall] = useState(null);
+  const [ballcode, setBallcode] = useState('');
+  const [codigoInvalido, setCodigoInvalido] = useState(false);
 
   const toggle = () => setModal(!modal);
 
@@ -56,18 +59,31 @@ const Balls = ({ balls, profile }) => {
     return cases[value]();
   };
 
-  const updateList = (id) => {
-    const newList = balls.map((ball) => {
-      if(ball.id === id) return {
-        ...ball,
-        owner: profile.id
-      }
-      return ball
-    })
-    const newProfile = profile.balls.push(id)
+  const handlerBallcode = (code) => {
+    setBallcode(code)
+  }
 
-    setList(newList)
-    setModal(false)
+  const updateList = (actualBall) => {
+    const codigoValido = actualBall.ballcode === ballcode;
+    if (codigoValido) {
+      const newList = balls.map((ball) => {
+        console.log('Ball id = id? ',actualBall.id, ball.id, (ball.id === actualBall.id))
+        if(ball.id === actualBall.id) return {
+          ...ball,
+          owner: profile.id
+        }
+        return ball
+      })
+      profile.balls.push(actualBall.id)
+  
+      setBalls(newList)
+      setList(newList)
+      setModal(false)
+      setBallcode(null)
+      setCodigoInvalido(false);
+    } else {
+      setCodigoInvalido(!codigoValido);
+    }
   }
 
   return (
@@ -124,12 +140,16 @@ const Balls = ({ balls, profile }) => {
               type='number'
               name='ballcode'
               id='code'
+              value={ballcode}
+              invalid={codigoInvalido}
+              onChange={({target: { value }}) => handlerBallcode(value)}
               placeholder='Ex: 23412'
             />
+            <FormFeedback>Sr. Satan diz que você está tentando trapacear: Código inválido!</FormFeedback>
           </FormGroup>
         </ModalBody>
         <ModalFooter>
-        <Button color='success' onClick={() => updateList(currentBall?.id)}>
+        <Button color='success' onClick={() => updateList(currentBall)}>
             Validar
           </Button>
           <Button color='secondary' onClick={toggle}>
