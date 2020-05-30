@@ -116,8 +116,10 @@ const Balls = ({ dragonBalls, profile }) => {
                   {ball.owner !== profile.id ? (
                     <>
                       <Badge color='danger'>Não encontrada</Badge>
-                      <Button size='sm' color='warning' onClick={() => validateBall(ball)}>
-                        encontrei
+                      <Button
+                        size='sm'
+                        color='warning'
+                        onClick={() => validateBall(ball)}>Encontrei
                       </Button>
                     </>
                   ) : (
