@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { Box, Flex } from 'rebass'
 import {
   Label,
@@ -14,14 +15,19 @@ const FormCep = () => {
   const [ address, setAddress ] = useState(initialAddress)
 
   const fetchCep = async (cep) => {
-    const cepResult = await fetch(`https://viacep.com.br/ws/${cep}/json/`)
-    const { logradouro, bairro } = await cepResult.json()
-    setAddress({ logradouro, bairro })
+    const cepResult = await axios.get(`https://viacep.com.br/ws/${cep}/json/`, {
+      crossdomain: true });
+    if (!cepResult.data.erro) {
+      const { logradouro, bairro } = cepResult.data
+      setAddress({ logradouro, bairro })
+    } 
   }
 
-  const handleCepField = value => {
-    setCep(value)
-    if(value.length === 8) fetchCep(cep)
+  const handleCepField = async (value) => {
+    if(value.length === 8) {
+      setCep(cep)
+      await fetchCep(value)
+    }
   }
 
   return (

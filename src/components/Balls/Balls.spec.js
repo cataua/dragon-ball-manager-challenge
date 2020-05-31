@@ -1,6 +1,6 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
-import { render, fireEvent, getByText } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import Balls from './Balls'
 import esferas from '../../mocks/esferas.json';
 import { profile } from '../../mocks/profile.json';
@@ -57,11 +57,53 @@ it('Should be render component Balls w found balls and select to not found balls
   expect(totalCards.length).not.toBe(totalBalls);
 })
 
-it('Should be render modal  ', () => {
-  const { debug, getAllByText } = render(<Balls dragonBalls={esferas.balls} profile={profile} />);
+it('Should be render modal', () => {
+  const { debug, getAllByText, getByRole } = render(<Balls dragonBalls={esferas.balls} profile={profile} />);
   const [buttonElement] = getAllByText('Encontrei')//.closest('button');
   const foundButton = buttonElement.closest('button');
   fireEvent.click(foundButton)
-  // console.log('Button -> ', foundButton.closest('button'));
-  debug();
+  const visibleModal = getByRole('dialog');
+  expect(visibleModal).toBeVisible();
+})
+
+it('Fill ball code wrong', () => {
+  const {
+    debug,
+    getAllByText,
+    getByText,
+    getByPlaceholderText,
+    getByRole 
+  } = render(<Balls dragonBalls={esferas.balls} profile={profile} />);
+  const [buttonElement] = getAllByText('Encontrei')//.closest('button');
+  const foundButton = buttonElement.closest('button');
+  fireEvent.click(foundButton)
+  const visibleModal = getByRole('dialog');
+  expect(visibleModal).toBeVisible();
+  const inputCodeBall = getByPlaceholderText('Ex: 23412').closest('input');
+  fireEvent.change(inputCodeBall, {target: { value: "3421"}});
+  const buttonValidar = getByText('Validar').closest('button');
+  fireEvent.click(buttonValidar)
+  expect(inputCodeBall).toHaveClass('is-invalid');
+  debug()
+})
+
+it('Fill ball right code', () => {
+  const {
+    debug,
+    getAllByText,
+    getByText,
+    getByPlaceholderText,
+    getByRole 
+  } = render(<Balls dragonBalls={esferas.balls} profile={profile} />);
+  const [buttonElement] = getAllByText('Encontrei')//.closest('button');
+  const foundButton = buttonElement.closest('button');
+  fireEvent.click(foundButton)
+  const visibleModal = getByRole('dialog');
+  expect(visibleModal).toBeVisible();
+  const inputCodeBall = getByPlaceholderText('Ex: 23412').closest('input');
+  fireEvent.change(inputCodeBall, {target: { value: "3422"}});
+  const buttonValidar = getByText('Validar').closest('button');
+  fireEvent.click(buttonValidar)
+  expect(inputCodeBall).not.toHaveClass('is-invalid');
+  debug()
 })
