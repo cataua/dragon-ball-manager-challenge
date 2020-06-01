@@ -13,6 +13,7 @@ const FormCep = () => {
   }
   const [ cep, setCep ] = useState('')
   const [ address, setAddress ] = useState(initialAddress)
+  const [ erro, setErro ] = useState(false);
 
   const fetchCep = async (cep) => {
     const cepResult = await axios.get(`https://viacep.com.br/ws/${cep}/json/`, {
@@ -20,7 +21,9 @@ const FormCep = () => {
     if (!cepResult.data.erro) {
       const { logradouro, bairro } = cepResult.data
       setAddress({ logradouro, bairro })
-    } 
+    } else {
+      setErro(true)
+    }
   }
 
   const handleCepField = async (value) => {
@@ -39,8 +42,12 @@ const FormCep = () => {
             id='cep'
             name='cep'
             placeholder="CEP"
+            value={cep}
             onChange={({ target : { value } }) => handleCepField(value)}
           />
+          {erro ? (
+            <span>CEP não encontrado</span>
+          ) : '' }
         </Box>
         <Box width={1 / 2} px={2}>
         <Label htmlFor='bairro'>Bairro</Label>
